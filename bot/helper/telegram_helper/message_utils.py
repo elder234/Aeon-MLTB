@@ -10,7 +10,7 @@ from pyrogram.errors import (
     MessageEmpty,
     MessageNotModified,
 )
-from pyrogram.types import InputMediaPhoto
+from pyrogram.types import InputMediaPhoto, Message
 
 from bot import (
     DOWNLOAD_DIR,
@@ -50,7 +50,6 @@ async def send_message(
         if photo:
             return await message.reply_photo(
                 photo=photo,
-                reply_to_message_id=message.id,
                 caption=text,
                 reply_markup=buttons,
                 disable_notification=True,
@@ -58,7 +57,6 @@ async def send_message(
             )
         return await message.reply_text(
             text=text,
-            reply_to_message_id=message.id,
             disable_notification=True,
             reply_markup=buttons,
             parse_mode=parse_mode,
@@ -118,7 +116,6 @@ async def send_file(message, file, caption="", buttons=None):
     try:
         return await message.reply_document(
             document=file,
-            reply_to_message_id=message.id,
             caption=caption,
             disable_notification=True,
             reply_markup=buttons,
