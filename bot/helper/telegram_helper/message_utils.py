@@ -56,9 +56,9 @@ async def send_message(
                 disable_notification=True,
                 parse_mode=parse_mode,
             )
-        return await message.reply(
+        return await message.reply_text(
             text=text,
-            quote=True,
+            reply_to_message_id=message.id,
             disable_notification=True,
             reply_markup=buttons,
             parse_mode=parse_mode,
@@ -118,7 +118,7 @@ async def send_file(message, file, caption="", buttons=None):
     try:
         return await message.reply_document(
             document=file,
-            quote=True,
+            reply_to_message_id=message.id,
             caption=caption,
             disable_notification=True,
             reply_markup=buttons,
@@ -151,11 +151,11 @@ async def send_rss(text, chat_id, thread_id):
 
 
 async def delete_message(*args):
-    msgs = [msg.delete() for msg in args if msg]
+    msgs = [msg.delete() for msg in args if msg and isinstance(msg, Message)]
     results = await gather(*msgs, return_exceptions=True)
 
     for msg, result in zip(args, results, strict=False):
-        if isinstance(result, Exception):
+        if isinstance(msg, Message) and isinstance(result, Exception):
             LOGGER.error(f"Failed to delete message {msg}: {result}", exc_info=True)
 
 
